@@ -1,9 +1,15 @@
 FROM python:3.9-slim
 
-WORKDIR ./freemqtt_app
- 
-ADD . .
+# 使用绝对路径
+WORKDIR /app
 
-RUN pip install -r requirements.txt
+# 先复制 requirements.txt 安装依赖，利用缓存
+COPY requirements.txt .
 
-CMD ["python", "./freemqttd.py"]
+# 安装依赖
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 复制其余文件
+COPY . .
+
+CMD ["python", "freemqttd.py"]
